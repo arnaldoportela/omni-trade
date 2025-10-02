@@ -1,0 +1,25 @@
+
+
+architecture-beta
+    group users(logos:aws-lambda)[Users Microservice]
+
+    service users_db1(logos:aws-rds)[Users Database 1] in users
+    service users_server1(logos:aws-ecs)[Users API 1] in users
+    service users_server2(logos:aws-ecs)[Users API 2] in users
+    service users_lb(logos:aws-elb)[Users Load Balancer] in users
+    
+    junction users_junc_api in users
+    junction users_junc_db in users
+    junction users_junc_db_api_1 in users
+    junction users_junc_db_api_2 in users
+    
+    users_db1:B -- T:users_junc_db
+    users_junc_db:R -- L:users_junc_db_api_2
+    users_junc_db:L -- R:users_junc_db_api_1
+
+    users_junc_db_api_1:B -- T:users_server1
+    users_junc_db_api_2:B -- T:users_server2
+
+    users_server2:L -- R:users_junc_api
+    users_server1:R -- L:users_junc_api
+    users_junc_api:B -- T:users_lb

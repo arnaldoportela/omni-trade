@@ -1,0 +1,5 @@
+openapi: 3.0.0
+info:
+  title: Session Based Auth API
+  version: 1.0.0
+  description: Session Based Authentication API

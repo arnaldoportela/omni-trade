@@ -1,0 +1,77 @@
+classDiagram
+
+namespace WebAPI {
+        class AddUserController {
+        <<interface>>
+        +IActionResult AddUsers(UserRequest request)
+    }
+
+    class GetUsersController {
+        <<interface>>
+        +IActionResult<PaginatedResponse<UserResponse>> GetUsers(PaginationParams params)
+        +IActionResult<UserResponse> GetUser(Guid id)
+    }
+
+    class UpdateUserController {
+        <<interface>>
+        +IActionResult UpdateUser(Guid id, UserRequest request)
+    }
+
+    class DeleteUserController {
+        <<interface>>
+        +IActionResult DeleteUser(Guid id)
+    }
+}
+
+namespace UseCases {
+    class AddUserUseCase {
+        <<interface>>
+        +void Execute(UserRequest request)
+    }
+
+    class GetUsersUseCase {
+        <<interface>>
+        +PaginatedResponse<UserResponse> Execute(PaginationParams params)
+        +UserResponse Execute(Guid id)
+    }
+
+    class UpdateUserUseCase {
+        <<interface>>
+        +void Execute(Guid id, UserRequest request)
+    }
+
+    class DeleteUserUseCase {
+        <<interface>>
+        +void Execute(Guid id)
+    }
+}
+
+namespace Repositories {
+    class AddUserRepository {
+        <<interface>>
+        +void Add(User user)
+    }
+    class GetUsersRepository {
+        <<interface>>
+        +List<User> GetAll(PaginationParams params)
+        +User GetById(Guid id)
+    }
+    class UpdateUserRepository {
+        <<interface>>
+        +void Update(User user)
+    }
+    class DeleteUserRepository {
+        <<interface>>
+        +void Delete(Guid id)
+    }
+}
+
+AddUserController --> AddUserUseCase : uses
+GetUsersController --> GetUsersUseCase : uses
+UpdateUserController --> UpdateUserUseCase : uses
+DeleteUserController --> DeleteUserUseCase : uses
+
+AddUserUseCase --> AddUserRepository : uses
+GetUsersUseCase --> GetUsersRepository : uses
+UpdateUserUseCase --> UpdateUserRepository : uses
+DeleteUserUseCase --> DeleteUserRepository : uses

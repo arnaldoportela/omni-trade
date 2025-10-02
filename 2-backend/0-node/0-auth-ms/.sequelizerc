@@ -1,0 +1,10 @@
+const { resolve } = require('path');
+require('dotenv').config();
+console.log(__dirname)
+module.exports = {
+  config: resolve(__dirname, 'db', 'config', 'config.ts'),
+  url: process.env.CONNECTION_STRING,
+  'models-path': resolve(__dirname, 'db', 'models'),
+  'seeders-path': resolve(__dirname, 'db', 'seeders'),
+  'migrations-path': resolve(__dirname, 'db', 'migrations'),
+};

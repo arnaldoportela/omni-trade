@@ -1,0 +1,20 @@
+{
+  "name": "0-gitops-user-ms",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "migrate": "docker run --rm -v %cd%:/workspace --workdir /workspace --env-file .env liquibase/liquibase --defaultsFile=/workspace/liquibase.properties update",
+    "migrate:undo": "docker run --rm -v %cd%:/workspace --workdir /workspace --env-file .env liquibase/liquibase --defaultsFile=/workspace/liquibase.properties rollbackCount 1",
+    "migrate:undo:all": "docker run --rm -v %cd%:/workspace --workdir /workspace --env-file .env liquibase/liquibase --defaultsFile=/workspace/liquibase.properties dropAll"
+  },
+  "devDependencies": {
+    "dotenv-cli": "^7.0.0",
+    "liquibase-cli": "^0.1.0"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    
+  }
+}

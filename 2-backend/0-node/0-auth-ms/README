@@ -1,0 +1,177 @@
+new migration: npx sequelize-cli migration:generate --name subject
+
+auth-service/
+├─ .sequelizerc                         # Aponta caminhos de migrations/seeders/config
+├─ package.json
+├─ tsconfig.json
+├─ tsconfig.build.json
+├─ .env.example
+├─ Dockerfile
+├─ docker-compose.yml                   # opcional (db + redis ou só db)
+├─ jest.config.ts                       # opcional
+├─ eslint.config.js                     # opcional
+│
+├─ db/                                   # Área “operacional” do sequelize-cli
+│  ├─ config/
+│  │  └─ config.js                      # conf do sequelize-cli (lê process.env)
+│  ├─ migrations/
+│  │  ├─ 20250101XXXX-create-subject.js
+│  │  ├─ 20250101XXXX-create-session.js
+│  │  ├─ 20250101XXXX-create-credentials.js
+│  │  ├─ 20250101XXXX-create-nonce.js
+│  │  └─ 20250101XXXX-create-mfa.js
+│  └─ seeders/
+│     └─ 20250101XXXX-seed-initial-config.js
+│
+└─ src/
+   ├─ main.ts                            # bootstrap: env, DI, db, http
+   ├─ app.ts                             # instancia Express e middlewares base
+   │
+   ├─ config/
+   │  ├─ env.ts                          # tipagem/validacao de env (zod/joi)
+   │  ├─ index.ts                        # agrega config
+   │  └─ security.ts                     # tempos de token, rotacao, políticas
+   │
+   ├─ container/
+   │  └─ di.ts                           # wiring de ports -> adapters (Inversify/TSyringe ou manual)
+   │
+   ├─ domain/auth/                       # **Domínio puro (sem Sequelize/HTTP)**
+   │  ├─ entities/
+   │  │  ├─ Subject.ts
+   │  │  ├─ Session.ts
+   │  │  ├─ Nonce.ts
+   │  │  ├─ credentials/
+   │  │  │  ├─ PasswordCredential.ts
+   │  │  │  ├─ OAuthCredential.ts
+   │  │  │  ├─ WalletCredential.ts
+   │  │  │  └─ WebAuthnCredential.ts
+   │  │  └─ mfa/
+   │  │     ├─ TotpFactor.ts
+   │  │     └─ RecoveryCodes.ts
+   │  │
+   │  ├─ value-objects/
+   │  │  ├─ SubjectId.ts
+   │  │  ├─ UserId.ts
+   │  │  ├─ SessionId.ts
+   │  │  ├─ RefreshFamilyId.ts
+   │  │  ├─ JwtId.ts
+   │  │  ├─ ProviderKey.ts
+   │  │  ├─ WalletAddress.ts
+   │  │  ├─ ChainId.ts
+   │  │  ├─ PasswordHash.ts
+   │  │  ├─ TotpSecret.ts
+   │  │  └─ NonceValue.ts
+   │  │
+   │  ├─ services/                       # domain services “puros”
+   │  │  ├─ WalletSignaturePolicy.ts     # regras de verificação (sem lib web3 aqui)
+   │  │  ├─ TokenPolicy.ts               # regras de claims/expiração
+   │  │  └─ PasswordPolicy.ts            # regras de força/rotação (sem bcrypt aqui)
+   │  │
+   │  ├─ ports/                          # interfaces (ports) do domínio
+   │  │  ├─ ISubjectRepository.ts
+   │  │  ├─ ISessionRepository.ts
+   │  │  ├─ INonceRepository.ts
+   │  │  ├─ ITokenSigner.ts
+   │  │  ├─ IOAuthVerifier.ts
+   │  │  ├─ IWalletVerifier.ts
+   │  │  ├─ IWebAuthnAttestation.ts
+   │  │  ├─ IClock.ts
+   │  │  └─ IEventBus.ts
+   │  │
+   │  └─ events/
+   │     ├─ SubjectAuthenticated.ts
+   │     ├─ SessionRevoked.ts
+   │     └─ CredentialLinked.ts
+   │
+   ├─ application/auth/                  # **Use Cases**
+   │  ├─ dtos/
+   │  │  ├─ AuthenticateDto.ts
+   │  │  ├─ RefreshDto.ts
+   │  │  ├─ LinkCredentialDto.ts
+   │  │  └─ MfaDtos.ts
+   │  ├─ use-cases/
+   │  │  ├─ AuthenticateWithPassword.ts
+   │  │  ├─ StartOAuthLogin.ts
+   │  │  ├─ CompleteOAuthLogin.ts
+   │  │  ├─ StartWalletLogin.ts          # gera nonce
+   │  │  ├─ CompleteWalletLogin.ts       # consome nonce + assina tokens
+   │  │  ├─ AuthenticateWithWebAuthn.ts
+   │  │  ├─ RefreshAccessToken.ts        # rotação de refresh
+   │  │  ├─ LogoutSession.ts
+   │  │  ├─ LogoutAllSessions.ts
+   │  │  ├─ EnrollTOTP.ts
+   │  │  ├─ VerifyTOTP.ts
+   │  │  ├─ GenerateRecoveryCodes.ts
+   │  │  ├─ LinkOAuthAccount.ts
+   │  │  ├─ LinkWallet.ts
+   │  │  └─ ChangePassword.ts
+   │  └─ validators/
+   │     └─ index.ts                     # validações de input (zod/class-validator)
+   │
+   ├─ adapters/
+   │  ├─ driving/http/express/
+   │  │  ├─ routes/
+   │  │  │  ├─ auth.routes.ts            # POST /auth/*, /mfa/*, /sessions/*
+   │  │  │  └─ health.routes.ts
+   │  │  ├─ controllers/
+   │  │  │  ├─ AuthController.ts
+   │  │  │  └─ MfaController.ts
+   │  │  ├─ middlewares/
+   │  │  │  ├─ error-handler.ts
+   │  │  │  ├─ rate-limit.ts
+   │  │  │  └─ require-auth.ts           # p/ rotas que exigem access token
+   │  │  └─ presenters/
+   │  │     └─ HttpPresenter.ts          # mapeia resultados/erros → HTTP
+   │  │
+   │  └─ driven/
+   │     ├─ db/sequelize/                # **ORM vive aqui (fora do domínio)**
+   │     │  ├─ models/
+   │     │  │  ├─ SubjectModel.ts
+   │     │  │  ├─ SessionModel.ts
+   │     │  │  ├─ CredentialModel.ts     # tipo union: password/oauth/wallet/webauthn
+   │     │  │  ├─ NonceModel.ts
+   │     │  │  └─ MfaModel.ts
+   │     │  ├─ repositories/
+   │     │  │  ├─ SubjectSequelizeRepository.ts
+   │     │  │  ├─ SessionSequelizeRepository.ts
+   │     │  │  └─ NonceSequelizeRepository.ts
+   │     │  ├─ mappers/
+   │     │  │  ├─ subject.mapper.ts      # domain <-> model
+   │     │  │  ├─ session.mapper.ts
+   │     │  │  └─ credential.mapper.ts
+   │     │  └─ sequelize.ts              # instancia Sequelize (pool, logging)
+   │     │
+   │     ├─ tokens/
+   │     │  └─ JwtSigner.ts              # implementa ITokenSigner (jose/jsonwebtoken)
+   │     ├─ oauth/
+   │     │  └─ GoogleOAuthVerifier.ts    # implementa IOAuthVerifier
+   │     ├─ wallet/
+   │     │  └─ SiweWalletVerifier.ts     # implementa IWalletVerifier (ethers + SIWE)
+   │     ├─ webauthn/
+   │     │  └─ WebAuthnAttestation.ts    # implementa IWebAuthnAttestation
+   │     ├─ time/
+   │     │  └─ SystemClock.ts            # implementa IClock
+   │     └─ bus/
+   │        └─ EventBusNats.ts           # ou Redis/Kafka; implementa IEventBus
+   │
+   ├─ shared/
+   │  ├─ errors/
+   │  │  ├─ AppError.ts
+   │  │  ├─ UnauthorizedError.ts
+   │  │  ├─ ConflictError.ts
+   │  │  └─ ValidationError.ts
+   │  ├─ utils/
+   │  │  ├─ neverThrow.ts
+   │  │  ├─ crypto.ts                    # util genérico (sal/nonce randômico)
+   │  │  └─ pagination.ts
+   │  └─ types/
+   │     └─ index.ts
+   │
+   └─ tests/
+      ├─ unit/
+      │  ├─ domain/
+      │  ├─ application/
+      │  └─ adapters/
+      └─ integration/
+         ├─ http/
+         └─ repositories/

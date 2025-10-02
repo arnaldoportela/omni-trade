@@ -1,0 +1,569 @@
+erDiagram
+Countries {
+    uuid-v7 id PK "unique, not null"
+    string(250) name "unique, not null"
+    string(2) iso_code "unique, not null"
+    integer phone_code "unique, not null"
+    boolean excluded "not null, default false"
+    datetime2 created_at "not null, default current_timestamp"
+    uuid-v7 created_by FK "[Users:id] not null"
+    datetime2 updated_at "not null, default current_timestamp"
+    uuid-v7 updated_by FK "[Users:id] not null"
+}
+
+Files{
+    uuid-v7 id PK "unique, not null"
+    string(250) url "not null"
+    string(20) mime_type "not null"
+    string(150) name "not null"
+    boolean excluded "not null, default false"
+    datetime2 created_at "not null, default current_timestamp"
+    uuid-v7 created_by FK "[Users:id] not null"
+    datetime2 updated_at "not null, default current_timestamp"
+    uuid-v7 updated_by FK "[Users:id] not null"
+}
+
+Users{
+    uuid-v7 id PK "unique, not null"
+    string(50) username "unique, not null"
+    string(150) name "not null"
+    uuid-v7 avatar_id FK "[Files:id] null"
+    uuid-v7 tax_country_id FK "[Countries:id] not null"
+    enum status "APPROVED|PENDING|REJECTED|BLOCKED, not null, default PENDING"
+    uuid-v7 role_id FK "[Roles:id] not null"
+    boolean excluded "not null, default false"
+    datetime2 created_at "not null, default current_timestamp"
+    uuid-v7 created_by FK "[Users:id] not null"
+    datetime2 updated_at "not null, default current_timestamp"
+    uuid-v7 updated_by FK "[Users:id] not null"
+}
+
+Documents{
+    uuid-v7 id PK "unique, not null"
+    uuid-v7 file_id FK "[Files:id] not null"
+    uuid-v7 user_id FK "[Users:id] not null"
+    uuid-v7 document_type_id FK "[DocumentTypes:id] not null"
+    enum status "APPROVED|PENDING|REJECTED, not null, default PENDING"
+    boolean excluded "not null, default false"
+    datetime2 revised_at "not null, default current_timestamp"
+    uuid-v7 revised_by FK "[Users:id] not null"
+    datetime2 created_at "not null, default current_timestamp"
+    uuid-v7 created_by FK "[Users:id] not null"
+    datetime2 updated_at "not null, default current_timestamp"
+    uuid-v7 updated_by FK "[Users:id] not null"
+}
+
+DocumentTypes{
+    uuid-v7 id PK "unique, not null"
+    string(100) name "unique, not null"
+    uuid-v7 country_id FK "[Countries:id] not null"
+    boolean excluded "not null, default false"
+    datetime2 created_at "not null, default current_timestamp"
+    uuid-v7 created_by FK "[Users:id] not null"
+    datetime2 updated_at "not null, default current_timestamp"
+    uuid-v7 updated_by FK "[Users:id] not null"
+}
+
+Policies{
+    uuid-v7 id PK "unique, not null"
+    string(100) name "unique, not null"
+    text description "not null"
+    boolean excluded "not null, default false"
+    datetime2 created_at "not null, default current_timestamp"
+    uuid-v7 created_by FK "[Users:id] not null"
+    datetime2 updated_at "not null, default current_timestamp"
+    uuid-v7 updated_by FK "[Users:id] not null"
+}
+
+Roles{
+    uuid-v7 id PK "unique, not null"
+    string(50) name "unique, not null"
+    boolean excluded "not null, default false"
+    datetime2 created_at "not null, default current_timestamp"
+    uuid-v7 created_by FK "[Users:id] not null"
+    datetime2 updated_at "not null, default current_timestamp"
+    uuid-v7 updated_by FK "[Users:id] not null"
+}
+
+RolesPolicies{
+    uuid-v7 role_id PK, FK "[Roles:id] not null"
+    uuid-v7 policy_id PK, FK "[Policies:id] not null"
+    boolean excluded "not null, default false"
+    datetime2 created_at "not null, default current_timestamp"
+    uuid-v7 created_by FK "[Users:id] not null"
+    datetime2 updated_at "not null, default current_timestamp"
+    uuid-v7 updated_by FK "[Users:id] not null"
+}
+
+Contacts{
+    uuid-v7 id PK "unique, not null"
+    enum type "EMAIL|PHONE|OTHER, not null"
+    string(150) value "not null"
+    uuid-v7 user_id FK "[Users:id] not null"
+    boolean verified "not null, default false"
+    boolean excluded "not null, default false"
+    datetime2 created_at "not null, default current_timestamp"
+    uuid-v7 created_by FK "[Users:id] not null"
+    datetime2 updated_at "not null, default current_timestamp"
+    uuid-v7 updated_by FK "[Users:id] not null"
+}
+
+Traits{
+    uuid-v7 id PK "unique, not null"
+    string(100) name "not null"
+    string(100) value "not null"
+    boolean excluded "not null, default false"
+    datetime2 created_at "not null, default current_timestamp"
+    uuid-v7 created_by FK "[Users:id] not null"
+    datetime2 updated_at "not null, default current_timestamp"
+    uuid-v7 updated_by FK "[Users:id] not null"
+}
+
+Attributes{
+    uuid-v7 id PK "unique, not null"
+    string(100) name "not null"
+    float value "not null"
+    boolean excluded "not null, default false"
+    datetime2 created_at "not null, default current_timestamp"
+    uuid-v7 created_by FK "[Users:id] not null"
+    datetime2 updated_at "not null, default current_timestamp"
+    uuid-v7 updated_by FK "[Users:id] not null"
+}
+
+Tokens{
+    uuid-v7 id PK "unique, not null"
+    string(100) name "not null"
+    string(5) symbol "not null"
+    integer decimals "not null"
+    string(250) contract_address "unique, not null"
+    uuid-v7 network_id FK "[Networks:id] not null"
+    boolean excluded "not null, default false"
+    datetime2 created_at "not null, default current_timestamp"
+    uuid-v7 created_by FK "[Users:id] not null"
+    datetime2 updated_at "not null, default current_timestamp"
+    uuid-v7 updated_by FK "[Users:id] not null"
+}
+
+SocialPlatforms{
+    uuid-v7 id PK "unique, not null"
+    string(100) name "unique, not null"
+    string(250) url_pattern "not null"
+    boolean excluded "not null, default false"
+    datetime2 created_at "not null, default current_timestamp"
+    uuid-v7 created_by FK "[Users:id] not null"
+    datetime2 updated_at "not null, default current_timestamp"
+    uuid-v7 updated_by FK "[Users:id] not null"
+}
+
+SocialLinks{
+    uuid-v7 id PK "unique, not null"
+    uuid-v7 social_platform_id FK "[SocialPlatforms:id] not null"
+    string(250) url "not null"
+    boolean excluded "not null, default false"
+    datetime2 created_at "not null, default current_timestamp"
+    uuid-v7 created_by FK "[Users:id] not null"
+    datetime2 updated_at "not null, default current_timestamp"
+    uuid-v7 updated_by FK "[Users:id] not null"
+}
+
+UserSocialLinks {
+    uuid-v7 user_id PK, FK "[Users:id] not null"
+    uuid-v7 social_link_id PK, FK "[SocialLinks:id] not null"
+    boolean excluded "not null, default false"
+    datetime2 created_at "not null, default current_timestamp"
+    uuid-v7 created_by FK "[Users:id] not null"
+    datetime2 updated_at "not null, default current_timestamp"
+    uuid-v7 updated_by FK "[Users:id] not null"
+}
+
+CollectionSocialLinks {
+    uuid-v7 collection_id PK, FK "[Collections:id] not null"
+    uuid-v7 social_link_id PK, FK "[SocialLinks:id] not null"
+    boolean excluded "not null, default false"
+    datetime2 created_at "not null, default current_timestamp"
+    uuid-v7 created_by FK "[Users:id] not null"
+    datetime2 updated_at "not null, default current_timestamp"
+    uuid-v7 updated_by FK "[Users:id] not null"
+}
+
+Collections{
+    uuid-v7 id PK "unique, not null"
+    string(150) name "not null"
+    text description "not null"
+    uuid-v7 cover_id FK "[Files:id] null"
+    uuid-v7 logo_id FK "[Files:id] null"
+    uuid-v7 network_id FK "[Networks:id] not null"
+    uuid-v7 category_id FK "[Categories:id] not null"
+    uuid-v7 gallery_id FK "[Galleries:id] null"
+    uuid-v7 royalty_id FK "[Royalties:id] null"
+    uuid-v7 creator_id FK "[Users:id] not null"
+    boolean excluded "not null, default false"
+    datetime2 created_at "not null, default current_timestamp"
+    uuid-v7 created_by FK "[Users:id] not null"
+    datetime2 updated_at "not null, default current_timestamp"
+    uuid-v7 updated_by FK "[Users:id] not null"
+}
+
+Nfts{
+    uuid-v7 id PK "unique, not null"
+    string(150) name "not null"
+    text description "not null"
+    string(250) media_url "not null"
+    string(20) media_type "not null"
+    uuid-v7 preview_file_id FK "[Files:id] null"
+    uuid-v7 collection_id FK "[Collections:id] not null"
+    uuid-v7 category_id FK "[Categories:id] not null"
+    uuid-v7 creator_id FK "[Users:id] not null"
+    uuid-v7 owner_id FK "[Users:id] not null"
+    uuid-v7 network_id FK "[Networks:id] not null"
+    uuid-v7 royalty_id FK "[Royalties:id] null"
+    string(250) contract_address "null"
+    integer token_id "null"
+    boolean excluded "not null, default false"
+    datetime2 created_at "not null, default current_timestamp"
+    uuid-v7 created_by FK "[Users:id] not null"
+    datetime2 updated_at "not null, default current_timestamp"
+    uuid-v7 updated_by FK "[Users:id] not null"
+}
+
+RoyaltyRules{
+    uuid-v7 id PK "unique, not null"
+    float percentage "not null"
+    uuid-v7 royalty_id FK "[Royalties:id] not null"
+    uuid-v7 wallet_id FK "[Wallets:id] not null"
+    boolean excluded "not null, default false"
+    datetime2 created_at "not null, default current_timestamp"
+    uuid-v7 created_by FK "[Users:id] not null"
+    datetime2 updated_at "not null, default current_timestamp"
+    uuid-v7 updated_by FK "[Users:id] not null"
+}
+
+Royalties{
+    uuid-v7 id PK "unique, not null"
+    string(100) name "not null"
+    text description "not null"
+    boolean excluded "not null, default false"
+    datetime2 created_at "not null, default current_timestamp"
+    uuid-v7 created_by FK "[Users:id] not null"
+    datetime2 updated_at "not null, default current_timestamp"
+    uuid-v7 updated_by FK "[Users:id] not null"
+}
+
+Galleries{
+    uuid-v7 id PK "unique, not null"
+    string(150) name "not null"
+    text description "not null"
+    uuid-v7 cover_id FK "[Files:id] null"
+    uuid-v7 royalty_id FK "[Royalties:id] null"
+    boolean excluded "not null, default false"
+    datetime2 created_at "not null, default current_timestamp"
+    uuid-v7 created_by FK "[Users:id] not null"
+    datetime2 updated_at "not null, default current_timestamp"
+    uuid-v7 updated_by FK "[Users:id] not null"
+}
+
+Categories{
+    uuid-v7 id PK "unique, not null"
+    string(100) name "unique, not null"
+    boolean excluded "not null, default false"
+    datetime2 created_at "not null, default current_timestamp"
+    uuid-v7 created_by FK "[Users:id] not null"
+    datetime2 updated_at "not null, default current_timestamp"
+    uuid-v7 updated_by FK "[Users:id] not null"
+}
+
+Listings{
+    uuid-v7 id PK "unique, not null"
+    float price "not null"
+    enum status "ACTIVE|SOLD|CANCELLED, not null, default ACTIVE"
+    uuid-v7 nft_id FK "[Nfts:id] not null"
+    uuid-v7 token_id FK "[Tokens:id] not null"
+    boolean excluded "not null, default false"
+    datetime2 created_at "not null, default current_timestamp"
+    uuid-v7 created_by FK "[Users:id] not null"
+    datetime2 updated_at "not null, default current_timestamp"
+    uuid-v7 updated_by FK "[Users:id] not null"
+}
+
+Auctions{
+    uuid-v7 id PK "unique, not null"
+    float starting_price "not null"
+    datetime2 ending_at "not null"
+    enum status "ACTIVE|COMPLETED|CANCELLED, not null, default ACTIVE"
+    uuid-v7 nft_id FK "[Nfts:id] not null"
+    uuid-v7 token_id FK "[Tokens:id] not null"
+    boolean excluded "not null, default false"
+    datetime2 created_at "not null, default current_timestamp"
+    uuid-v7 created_by FK "[Users:id] not null"
+    datetime2 updated_at "not null, default current_timestamp"
+    uuid-v7 updated_by FK "[Users:id] not null"
+}
+
+Bids{
+    uuid-v7 id PK "unique, not null"
+    float amount "not null"
+    uuid-v7 auction_id FK "[Auctions:id] not null"
+    uuid-v7 user_id FK "[Users:id] not null"
+    boolean excluded "not null, default false"
+    datetime2 created_at "not null, default current_timestamp"
+    uuid-v7 created_by FK "[Users:id] not null"
+    datetime2 updated_at "not null, default current_timestamp"
+    uuid-v7 updated_by FK "[Users:id] not null"
+}
+
+Offers{
+    uuid-v7 id PK "unique, not null"
+    float amount "not null"
+    enum status "PENDING|ACCEPTED|REJECTED|CANCELLED, not null, default PENDING"
+    uuid-v7 nft_id FK "[Nfts:id] not null"
+    uuid-v7 token_id FK "[Tokens:id] not null"
+    uuid-v7 user_id FK "[Users:id] not null"
+    boolean excluded "not null, default false"
+    datetime2 created_at "not null, default current_timestamp"
+    uuid-v7 created_by FK "[Users:id] not null"
+    datetime2 updated_at "not null, default current_timestamp"
+    uuid-v7 updated_by FK "[Users:id] not null"
+}
+
+Sessions{
+    uuid-v7 id PK "unique, not null"
+    string(250) token "unique, not null"
+    datetime2 expires_at "not null"
+    uuid-v7 user_id FK "[Users:id] not null"
+    boolean excluded "not null, default false"
+    datetime2 created_at "not null, default current_timestamp"
+    uuid-v7 created_by FK "[Users:id] not null"
+    datetime2 updated_at "not null, default current_timestamp"
+    uuid-v7 updated_by FK "[Users:id] not null"
+}
+
+Credentials{
+    uuid-v7 id PK "unique, not null"
+    string(150) email "unique, not null"
+    string(250) password_hash "not null"
+    uuid-v7 user_id FK "[Users:id] not null"
+    boolean excluded "not null, default false"
+    datetime2 created_at "not null, default current_timestamp"
+    uuid-v7 created_by FK "[Users:id] not null"
+    datetime2 updated_at "not null, default current_timestamp"
+    uuid-v7 updated_by FK "[Users:id] not null"
+}
+
+Tags{
+    uuid-v7 id PK "unique, not null"
+    string(50) name "unique, not null"
+    boolean excluded "not null, default false"
+    datetime2 created_at "not null, default current_timestamp"
+    uuid-v7 created_by FK "[Users:id] not null"
+    datetime2 updated_at "not null, default current_timestamp"
+    uuid-v7 updated_by FK "[Users:id] not null"
+}
+
+Drops{
+    uuid-v7 id PK "unique, not null"
+    string(150) name "not null"
+    text description "not null"
+    datetime2 drop_at "not null"
+    enum status "SCHEDULED|COMPLETED|CANCELLED, not null, default SCHEDULED"
+    float price "not null"
+    uuid-v7 collection_id FK "[Collections:id] not null"
+    uuid-v7 creator_id FK "[Users:id] not null"
+    boolean excluded "not null, default false"
+    datetime2 created_at "not null, default current_timestamp"
+    uuid-v7 created_by FK "[Users:id] not null"
+    datetime2 updated_at "not null, default current_timestamp"
+    uuid-v7 updated_by FK "[Users:id] not null"
+}
+
+Likes{
+    uuid-v7 id PK "unique, not null"
+    uuid-v7 user_id FK "[Users:id] not null"
+    uuid-v7 nft_id FK "[Nfts:id] null"
+    uuid-v7 collection_id FK "[Collections:id] null"
+    boolean excluded "not null, default false"
+    datetime2 created_at "not null, default current_timestamp"
+    uuid-v7 created_by FK "[Users:id] not null"
+    datetime2 updated_at "not null, default current_timestamp"
+    uuid-v7 updated_by FK "[Users:id] not null"
+}
+
+Favorites{
+    uuid-v7 id PK "unique, not null"
+    uuid-v7 user_id FK "[Users:id] not null"
+    uuid-v7 nft_id FK "[Nfts:id] null"
+    uuid-v7 collection_id FK "[Collections:id] null"
+    boolean excluded "not null, default false"
+    datetime2 created_at "not null, default current_timestamp"
+    uuid-v7 created_by FK "[Users:id] not null"
+    datetime2 updated_at "not null, default current_timestamp"
+    uuid-v7 updated_by FK "[Users:id] not null"
+}
+
+Notifications{
+    uuid-v7 id PK "unique, not null"
+    string(250) title "not null"
+    text message "not null"
+    boolean read "not null, default false"
+    uuid-v7 user_id FK "[Users:id] not null"
+    boolean excluded "not null, default false"
+    datetime2 created_at "not null, default current_timestamp"
+    uuid-v7 created_by FK "[Users:id] not null"
+    datetime2 updated_at "not null, default current_timestamp"
+    uuid-v7 updated_by FK "[Users:id] not null"
+}
+
+Sales{
+    uuid-v7 id PK "unique, not null"
+    float price "not null"
+    enum sale_type "LISTING|OFFER|AUCTION|DROP, not null"
+    uuid-v7 listing_id FK "[Listings:id] null"
+    uuid-v7 offer_id FK "[Offers:id] null"
+    uuid-v7 auction_id FK "[Auctions:id] null"
+    uuid-v7 drop_id FK "[Drops:id] null"
+    uuid-v7 nft_id FK "[Nfts:id] not null"
+    uuid-v7 token_id FK "[Tokens:id] not null"
+    uuid-v7 buyer_id FK "[Users:id] not null"
+    uuid-v7 seller_id FK "[Users:id] not null"
+    uuid-v7 to_wallet_id FK "[Wallets:id] not null"
+    datetime2 sold_at "not null, default current_timestamp"
+    boolean excluded "not null, default false"
+    datetime2 created_at "not null, default current_timestamp"
+    uuid-v7 created_by FK "[Users:id] not null"
+    datetime2 updated_at "not null, default current_timestamp"
+    uuid-v7 updated_by FK "[Users:id] not null"
+}
+
+Activities{
+    uuid-v7 id PK "unique, not null"
+    enum activity_type "MINTED|LISTED|SOLD|BOUGHT|BID_PLACED|BID_WON|OFFER_MADE|OFFER_ACCEPTED|OFFER_REJECTED|FOLLOWED|UNFOLLOWED|LIKED|UNLIKED, not null"
+    uuid-v7 user_id FK "[Users:id] not null"
+    uuid-v7 nft_id FK "[Nfts:id] null"
+    uuid-v7 drop_id FK "[Drops:id] null"
+    uuid-v7 listing_id FK "[Listings:id] null"
+    uuid-v7 auction_id FK "[Auctions:id] null"
+    uuid-v7 offer_id FK "[Offers:id] null"
+    uuid-v7 sale_id FK "[Sales:id] null"
+    uuid-v7 bid_id FK "[Bids:id] null"
+    datetime2 activity_at "not null, default current_timestamp"
+    boolean excluded "not null, default false"
+    datetime2 created_at "not null, default current_timestamp"
+    uuid-v7 created_by FK "[Users:id] not null"
+    datetime2 updated_at "not null, default current_timestamp"
+    uuid-v7 updated_by FK "[Users:id] not null"
+}
+
+Wallets{
+    uuid-v7 id PK "unique, not null"
+    string(100) name "not null"
+    string(250) address "unique, not null"
+    uuid-v7 network_id FK "[Networks:id] not null"
+    uuid-v7 user_id FK "[Users:id] not null"
+    boolean excluded "not null, default false"
+    datetime2 created_at "not null, default current_timestamp"
+    uuid-v7 created_by FK "[Users:id] not null"
+    datetime2 updated_at "not null, default current_timestamp"
+    uuid-v7 updated_by FK "[Users:id] not null"
+}
+
+Networks{
+    uuid-v7 id PK "unique, not null"
+    string(100) name "unique, not null"
+    string(250) rpc_url "not null"
+    string(250) explorer_url "not null"
+    string(250) currency_symbol "not null"
+    integer chain_id "unique, not null"
+    boolean excluded "not null, default false"
+    datetime2 created_at "not null, default current_timestamp"
+    uuid-v7 created_by FK "[Users:id] not null"
+    datetime2 updated_at "not null, default current_timestamp"
+    uuid-v7 updated_by FK "[Users:id] not null"
+}
+
+Addresses{
+    uuid-v7 id PK "unique, not null"
+    enum type "BILLING|SHIPPING|OTHER, not null"
+    string(150) line1 "not null"
+    string(150) line2 "null"
+    string(100) city "not null"
+    string(100) state "not null"
+    string(20) zip_code "not null"
+    uuid-v7 country_id FK "[Countries:id] not null"
+    uuid-v7 user_id FK "[Users:id] not null"
+    boolean excluded "not null, default false"
+    datetime2 created_at "not null, default current_timestamp"
+    uuid-v7 created_by FK "[Users:id] not null"
+    datetime2 updated_at "not null, default current_timestamp"
+    uuid-v7 updated_by FK "[Users:id] not null"
+}
+
+Documents }o--|| DocumentTypes : "Has"
+Users ||--o{ Documents : "Owns"
+DocumentTypes }o--|| Countries : "Belongs to"
+Users }o--|| Countries : "Belongs to"
+Users ||--|| Files : "Has avatar"
+Documents ||--|| Files : "Has"
+Documents }o--|| Users : "Revised by"
+RolesPolicies }o--|| Policies : "Has"
+RolesPolicies }o--|| Roles : "Has"
+Users }o--|| Roles : "Has"
+
+Users ||--o{ Contacts : "Has"
+Users ||--o{ Addresses : "Has"
+Addresses }o--|| Countries : "Belongs to"
+Users ||--o{ UserSocialLinks : "Has"
+UserSocialLinks |o--|| SocialLinks : "Belongs to"
+SocialLinks }o--|| SocialPlatforms : "Belongs to"
+Users ||--o{ Wallets : "Has"
+Wallets }o--|| Networks : "Belongs to"
+Users ||--o{ Sessions : "Has"
+Users ||--o{ Credentials : "Has"
+Users ||--o{ Notifications : "Has"
+Users ||--o{ Favorites : "Has"
+Nfts }o--|| Networks : "Belongs to"
+Collections }o--|| Networks : "Belongs to"
+Nfts }o--|| Collections : "Belongs to"
+Collections ||--o{ CollectionSocialLinks : "Has"
+CollectionSocialLinks |o--|| SocialLinks : "Belongs to"
+Collections }o--|| Users : "Created by"
+Nfts }o--|| Users : "Created by"
+Nfts }o--|| Files : "Has media"
+Nfts ||--o{ Likes : "Has"
+Collections ||--o{ Likes : "Has"
+Users ||--o{ Likes : "Has"
+Collections ||--o{ Favorites : "Has"
+Nfts ||--o{ Traits : "Has"
+Nfts ||--o{ Attributes : "Has"
+Nfts ||--o{ Tags : "Has"
+Collections ||--o{ Tags : "Has"
+Collections }o--|| Categories : "Belongs to"
+Collections }o--|| Galleries : "Belongs to"
+Royalties ||--o{ RoyaltyRules : "Has"
+RoyaltyRules }o--|| Wallets : "Paid to"
+Royalties ||--o{ Nfts : "For"
+Royalties ||--o{ Collections : "For"
+Royalties ||--o{ Galleries : "For"
+Nfts ||--o| Listings : "Has"
+Nfts ||--o| Auctions : "Has"
+Collections ||--o| Drops : "Has"
+Nfts ||--o{ Offers : "Has"
+Auctions ||--o{ Bids : "Has"
+Sales ||--o| Listings : "From"
+Sales ||--o| Offers : "From"
+Sales ||--o| Auctions : "From"
+Sales ||--o| Drops : "From"
+Sales }o--|| Wallets : "To"
+Sales }o--|| Nfts : "Of"
+Tokens }|--o{ Sales : "Used in"
+Tokens }|--o{ Listings : "Used in"
+Tokens }|--o{ Offers : "Used in"
+Tokens }|--o{ Auctions : "Used in"
+Tokens }|--o{ Bids : "Used in"
+Activities }o--|| Users : "By"
+Activities }o--|| Nfts : "On"
+Activities }o--|| Drops : "On"
+Activities }o--|| Listings : "On"
+Activities }o--|| Auctions : "On"
+Activities }o--|| Offers : "On"
+Activities }o--|| Sales : "On"
+Activities }o--|| Bids : "On"
+Activities ||--|| Notifications : "Triggers"

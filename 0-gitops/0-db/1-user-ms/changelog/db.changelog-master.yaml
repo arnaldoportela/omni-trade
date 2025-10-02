@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: arnaldo
+      changes:
+        - sqlFile:
+            path: changelog/up/V1__create_users_table.sql
+            relativeToChangelogFile: false
+      rollback:
+        - sqlFile:
+            path: changelog/down/R1__drop_users_table.sql
+            relativeToChangelogFile: false

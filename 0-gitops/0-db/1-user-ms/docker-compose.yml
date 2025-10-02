@@ -1,0 +1,46 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: user_postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: omnitrade
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: omnitrade_user
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data_user:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U omnitrade -d omnitrade_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin_user
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "5060:80"
+    volumes:
+      - pgadmin_data_user:/var/lib/pgadmin
+      - ./servers.json:/pgadmin4/servers.json:ro
+    entrypoint: >
+      /bin/sh -c "
+        echo '*:*:*:omnitrade:123456' > /tmp/pgpassfile &&
+        chmod 600 /tmp/pgpassfile &&
+        exec /entrypoint.sh
+      "
+
+volumes:
+  postgres_data_user:
+  pgadmin_data_user:
