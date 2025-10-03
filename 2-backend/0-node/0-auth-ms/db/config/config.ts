@@ -5,18 +5,13 @@ dotenv.config();
 
 const Options: SequelizeOptions = {
   dialect: "postgres",
+  timezone: "+00:00",
   define: {
     timestamps: true,
   },
-
-  ...(process.env.DB_SSL === "true" && {
-    dialectOptions: {
-      ssl: {
-        require: true,
-        rejectUnauthorized: false,
-      },
-    },
-  }),
+  dialectOptions: {
+    useUTC: true
+  },
 };
 
 export default Options;

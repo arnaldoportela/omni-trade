@@ -1,7 +1,7 @@
 export class IEntity{
 
     constructor(
-        public id: string
+        public id: string | null
     ) {
         
     }

@@ -1,19 +1,30 @@
 import { DataTypes, Sequelize } from 'sequelize';
 import { IModel } from './IModel';
 import { v7 as uuidv7 } from 'uuid';
+import { SubjectEntity } from '@domain/auth/entities/SubjectEntity';
+import { Credential } from './Credential';
+import { Session } from './Session';
 
-export class Subject extends IModel{
+export class Subject extends IModel<SubjectEntity> {
+    public fromEntity(entity: SubjectEntity): any {
+        return {
+            id: entity.id ?? undefined,
+            name: entity.name,
+            credentials: entity.credentials?.map(c => new Credential().fromEntity(c)) ?? undefined,
+            sessions: entity.sessions?.map(c => new Session().fromEntity(c)) ?? undefined,
+        };
+    }
 
-    public id!: string;
-    public name!: string;
+    public toEntity(): SubjectEntity {
+        const obj = (this as any);
+        return new SubjectEntity(obj.id, obj.name, [], [], obj.createdAt, obj.updatedAt);
+    }
 
-    static setup(sequelize: Sequelize): void{
-        Subject.init({
+    static setup(sequelize: Sequelize): void {
+        this.init({
             id: {
                 type: DataTypes.UUID,
-                defaultValue: () => uuidv7(),
-                primaryKey: true,
-                allowNull: false
+                primaryKey: true
             },
             name: {
                 type: DataTypes.STRING,
@@ -23,10 +34,14 @@ export class Subject extends IModel{
             sequelize,
             tableName: 'Subjects'
         });
+
+        this.addHook('beforeCreate', async model => {
+            model.set('id', uuidv7());
+        });
     }
 
-    static associate(models: any): void{
-        Subject.hasMany(models.Credential, { foreignKey: 'subjectId', as: 'credentials' });
-        Subject.hasMany(models.Session, { foreignKey: 'subjectId', as: 'sessions' });
+    static associate(models: any): void {
+        this.hasMany(models.Credential, { foreignKey: 'subjectId', as: 'credentials' });
+        this.hasMany(models.Session, { foreignKey: 'subjectId', as: 'sessions' });
     }
 }

@@ -1,13 +1,16 @@
-import { SubjectEntity } from "@domain/entities/SubjectEntity";
-import { ISubjectRepository } from "../../../../../2-domain/auth/ports/repositories/ISubjectRepository";
+import { ISubjectRepository } from "@domain/auth/ports/repositories/ISubjectRepository";
 import { Subject } from "../models/Subject";
+import { SubjectEntity } from "@domain/auth/entities/SubjectEntity";
+import { Injectable } from "@crosscutting/ioc/InjectableDecorator";
+import { Credential } from "../models/Credential";
 
+@Injectable()
 export class SubjectRepository extends ISubjectRepository {
-    public async selectAll(): SubjectEntity[]{
+    public async selectAll(): Promise<SubjectEntity[]> {
         const entities: SubjectEntity[] = [];
         const subjects = await Subject.findAll();
 
-        subjects.forEach(_ => { 
+        subjects.forEach((_:any) => {
             entities.push(
                 new SubjectEntity(
                     _.id,
@@ -16,26 +19,34 @@ export class SubjectRepository extends ISubjectRepository {
                     [],
                     _.createdAt,
                     _.updatedAt
-                );
+                )
             );
         });
 
         return entities;
     }
 
-    public async select(id: string): SubjectEntity | null{
+    public async select(id: string): Promise<SubjectEntity | null> {
+        return null
+    }
+
+    public async add(entity: SubjectEntity): Promise<string> {
+        const model = new Subject().fromEntity(entity);
+        const e:any = await Subject.create(model,
+            {
+                include: [
+                    { model: Credential, as: "credentials" }
+                ]
+            });
+
+        return e.id;
+    }
+
+    public async update(id: string, entity: SubjectEntity): Promise<void> {
 
     }
 
-    public async add(entity: SubjectEntity): string{
-
-    }
-
-    public async update(id: string, entity: SubjectEntity): void{
-
-    }
-
-    public async delete(id: string): void{
+    public async delete(id: string): Promise<void> {
 
     }
 }

@@ -26,7 +26,7 @@ module.exports = {
     }, { transaction });
   }),
 
-  down: (queryInterface, Sequelize) => queryInterface.sequelize.transaction(async (transaction) => {
+  down: (queryInterface) => queryInterface.sequelize.transaction(async (transaction) => {
     await queryInterface.dropTable('Subjects', { transaction });
   })
 };

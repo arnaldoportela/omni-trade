@@ -18,7 +18,9 @@ class CompositionRoot {
 
     constructor() {
         this.container = IoCContainer.getInstance();
+    }
 
+    public bootstrap() {
         DomainDI.register(this.container);
         ApplicationDI.register(this.container);
         SequelizeDBDrivenAdapterDI.register(this.container);
@@ -34,4 +36,4 @@ class CompositionRoot {
     }
 }
 
-const root = new CompositionRoot();
+new CompositionRoot().bootstrap();

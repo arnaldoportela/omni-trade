@@ -1,21 +1,29 @@
 import { DataTypes, Sequelize } from 'sequelize';
 import { IModel } from './IModel';
 import { v7 as uuidv7 } from 'uuid';
+import { CredentialEntity } from '@domain/auth/entities/CredentialEntity';
 
-export class Credential extends IModel{
+export class Credential extends IModel<CredentialEntity> {
 
-    public id!: string;
-    public subjectId!: string;
-    public email!: string;
-    public passwordHash!: string;
+    public fromEntity(entity: CredentialEntity): any{
+        return {
+            id: entity.id ?? undefined,
+            subjectId: entity.subjectId ?? undefined,
+            email: entity.email,
+            passwordHash: entity.passwordHash
+        };
+    }
 
-    static setup(sequelize: Sequelize): void{
-        Credential.init({
+    public toEntity(): CredentialEntity{
+        const obj = (this as any);
+        return new CredentialEntity(obj.id, obj.subjectId, obj.email, obj.passwordHash, obj.createdAt, obj.updatedAt);
+    }
+
+    static setup(sequelize: Sequelize): void {
+        this.init({
             id: {
                 type: DataTypes.UUID,
-                defaultValue: () => uuidv7(),
-                primaryKey: true,
-                allowNull: false
+                primaryKey: true
             },
             subjectId: {
                 type: DataTypes.UUID,
@@ -33,9 +41,13 @@ export class Credential extends IModel{
             sequelize,
             tableName: 'Credentials'
         });
+
+        this.addHook('beforeCreate', async model => {
+            model.set('id', uuidv7());
+        });
     }
 
-    static associate(models: any): void{
-        Credential.belongsTo(models.Subject, { foreignKey: 'subjectId', as: 'subject' });
+    static associate(models: any): void {
+        this.belongsTo(models.Subject, { foreignKey: 'subjectId', as: 'subject' });
     }
 }

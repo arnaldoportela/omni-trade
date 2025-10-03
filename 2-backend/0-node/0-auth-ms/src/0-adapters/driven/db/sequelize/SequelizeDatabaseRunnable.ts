@@ -1,5 +1,4 @@
 import { Sequelize } from "sequelize";
-import { IModel } from "./models/IModel";
 import config from "../../../../../db/config/config";
 
 import { Subject } from "./models/Subject";

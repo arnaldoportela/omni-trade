@@ -19,9 +19,9 @@ export class App {
   }
 
   public build(): Express {
-    this.app.use(this._preRoutesMiddlewareConfigurator.register());
-    this.app.use(this._routesConfigurator.register());
-    this.app.use(this._postRoutesMiddlewareConfigurator.register());
+    this._preRoutesMiddlewareConfigurator.register(this.app);
+    this._routesConfigurator.register(this.app);
+    this._postRoutesMiddlewareConfigurator.register(this.app);
 
     return this.app;
   }

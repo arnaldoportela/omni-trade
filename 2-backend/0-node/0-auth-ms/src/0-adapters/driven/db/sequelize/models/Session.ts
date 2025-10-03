@@ -1,20 +1,28 @@
 import { DataTypes, Sequelize } from 'sequelize';
 import { IModel } from './IModel';
 import { v7 as uuidv7 } from 'uuid';
+import { SessionEntity } from '@domain/auth/entities/SessionEntity';
 
-export class Session extends IModel{
+export class Session extends IModel<SessionEntity> {
 
-    public id!: string;
-    public subjectId!: string;
-    public expiresAt!: Date;
+    public fromEntity(entity: SessionEntity): any {
+        return {
+            id: entity.id ?? undefined,
+            subjectId: entity.subjectId ?? undefined,
+            expiresAt: entity.expiresAt
+        };
+    }
 
-    static setup(sequelize: Sequelize): void{
-        Session.init({
+    public toEntity(): SessionEntity {
+        const obj = (this as any);
+        return new SessionEntity(obj.id, obj.subjectId, obj.expiresAt, obj.createdAt, obj.updatedAt);
+    }
+
+    static setup(sequelize: Sequelize): void {
+        this.init({
             id: {
                 type: DataTypes.UUID,
-                defaultValue: () => uuidv7(),
-                primaryKey: true,
-                allowNull: false
+                primaryKey: true
             },
             subjectId: {
                 type: DataTypes.UUID,
@@ -28,9 +36,13 @@ export class Session extends IModel{
             sequelize,
             tableName: 'Sessions'
         })
+
+        this.addHook('beforeCreate', async model => {
+            model.set('id', uuidv7());
+        });
     }
 
     static associate(models: any): void {
-        Session.belongsTo(models.Subject, { foreignKey: 'subjectId', as: 'subject'});
+        this.belongsTo(models.Subject, { foreignKey: 'subjectId', as: 'subject' });
     }
 }

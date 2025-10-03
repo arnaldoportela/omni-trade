@@ -5,7 +5,7 @@ import { SessionEntity } from "./SessionEntity";
 export class SubjectEntity extends IAuditableEntity{
 
     constructor(
-        public id: string,
+        public id: string | null,
         public name: string,
         public credentials: CredentialEntity[] = [],
         public sessions: SessionEntity[] = [],
