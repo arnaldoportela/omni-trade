@@ -9,7 +9,7 @@ export class RoutesConfigurator {
 
   private authRotes: AuthV1Routes
 
-  constructor(private _authRotes: AuthV1Routes) {
+  constructor(_authRotes: AuthV1Routes) {
     this.authRotes = _authRotes;
   }
 

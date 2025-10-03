@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import { Injectable } from '../../../../../../../3-crosscutting/ioc/InjectableDecorator';
+import { Injectable } from '@crosscutting/ioc/InjectableDecorator';
 
 import { ILogoutController } from '../abstractions/v1/ILogoutController';
 

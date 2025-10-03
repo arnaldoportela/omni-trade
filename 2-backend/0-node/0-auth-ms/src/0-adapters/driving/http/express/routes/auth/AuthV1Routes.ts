@@ -13,21 +13,31 @@ import { ILogoutController } from '../../controllers/auth/abstractions/v1/ILogou
 
 @Injectable()
 export class AuthV1Routes {
-    private router: Router;
+    private readonly router: Router;
+
+    private readonly registerController: IRegisterController;
+    private readonly loginController: ILoginController;
+    private readonly validateController: IValidateController;
+    private readonly logoutController: ILogoutController;
 
     constructor(
-        private _registerController: IRegisterController,
-        private _loginController: ILoginController,
-        private _validateController: IValidateController,
-        private _logoutController: ILogoutController) {
+        _registerController: IRegisterController,
+        _loginController: ILoginController,
+        _validateController: IValidateController,
+        _logoutController: ILogoutController) {
         this.router = Router();
+
+        this.registerController = _registerController;
+        this.loginController = _loginController;
+        this.validateController = _validateController;
+        this.logoutController = _logoutController;
     }
 
     public register(): Router {
-        this.router.post('/v1/register', asyncErrorWrapper(this._registerController.post.bind(this._registerController)));
-        this.router.post('/v1/login', asyncErrorWrapper(this._loginController.post.bind(this._loginController)));
-        this.router.post('/v1/validate', asyncErrorWrapper(this._validateController.post.bind(this._validateController)));
-        this.router.post('/v1/logout', isAuthenticatedMiddleware, asyncErrorWrapper(this._logoutController.post.bind(this._logoutController)));
+        this.router.post('/v1/register', asyncErrorWrapper(this.registerController.post.bind(this.registerController)));
+        this.router.post('/v1/login', asyncErrorWrapper(this.loginController.post.bind(this.loginController)));
+        this.router.post('/v1/validate', asyncErrorWrapper(this.validateController.post.bind(this.validateController)));
+        this.router.post('/v1/logout', isAuthenticatedMiddleware, asyncErrorWrapper(this.logoutController.post.bind(this.logoutController)));
         return this.router;
     }
 }

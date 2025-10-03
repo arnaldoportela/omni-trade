@@ -12,8 +12,12 @@ import { CredentialEntity } from "@domain/auth/entities/CredentialEntity";
 @Injectable()
 export class RegisterUseCase extends IRegisterUseCase {
 
-    constructor(private readonly _subjectRepository: ISubjectRepository) {
+    private readonly subjectRepository: ISubjectRepository
+
+    constructor(_subjectRepository: ISubjectRepository) {
         super();
+
+        this.subjectRepository = _subjectRepository;
     }
 
     async execute(data: RegisterInputDTO): Promise<any> {
@@ -25,10 +29,10 @@ export class RegisterUseCase extends IRegisterUseCase {
             parallelism: 1 
         });
 
-        const id = await this._subjectRepository.add(new SubjectEntity(
-            null,
+        const id = await this.subjectRepository.add(new SubjectEntity(
+            undefined,
             data.name,
-            [new CredentialEntity(null, null, data.email, passwordHash)]
+            [new CredentialEntity(undefined, undefined, data.email, passwordHash)]
         ));
 
         return { subjectId: id };

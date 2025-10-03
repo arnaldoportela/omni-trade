@@ -26,6 +26,7 @@ export class SubjectRepository extends ISubjectRepository {
         return entities;
     }
 
+    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
     public async select(id: string): Promise<SubjectEntity | null> {
         return null
     }
@@ -42,10 +43,12 @@ export class SubjectRepository extends ISubjectRepository {
         return e.id;
     }
 
+    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
     public async update(id: string, entity: SubjectEntity): Promise<void> {
 
     }
 
+    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
     public async delete(id: string): Promise<void> {
 
     }

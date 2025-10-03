@@ -1,18 +1,20 @@
 import { Request, Response } from "express";
 
-import { RegisterInputDTO } from "../../../../../../../1-application/auth/dtos/input/RegisterInputDto";
-import { RegisterUseCase } from "../../../../../../../1-application/auth/useCases/RegisterUsecase";
-import { IRegisterUseCase } from "../../../../../../../1-application/auth/useCases/ports/IRegisterUsecase";
+import { RegisterInputDTO } from "@application/auth/dtos/input/RegisterInputDto";
+import { IRegisterUseCase } from "@application/auth/useCases/ports/IRegisterUsecase";
 
-import { Injectable } from "../../../../../../../3-crosscutting/ioc/InjectableDecorator";
+import { Injectable } from "@crosscutting/ioc/InjectableDecorator";
 
 import { IRegisterController } from "../abstractions/v1/IRegisterController";
 
 @Injectable()
 export class RegisterController extends IRegisterController {
 
-    constructor(private _registerUseCase: IRegisterUseCase) {
+    private readonly registerUseCase: IRegisterUseCase;
+ 
+    constructor(_registerUseCase: IRegisterUseCase) {
         super();
+        this.registerUseCase = _registerUseCase;
     }
 
     public async post(req: Request, res: Response): Promise<Response> {
@@ -23,7 +25,7 @@ export class RegisterController extends IRegisterController {
             password: req.body.password
         };
 
-        const result = await this._registerUseCase.execute(input);
+        const result = await this.registerUseCase.execute(input);
         return res.status(201).json(result);
     }
 }

@@ -11,16 +11,21 @@ import { SessionEntity } from "@domain/auth/entities/SessionEntity";
 @Injectable()
 export class LoginUseCase extends ILoginUseCase {
 
+    private readonly credentialRepository: ICredentialRepository;
+    private readonly sessionRepository: ISessionRepository;
+
     constructor(
-        private readonly _credentialRepository: ICredentialRepository,
-        private readonly _sessionRepository: ISessionRepository
+        _credentialRepository: ICredentialRepository,
+        _sessionRepository: ISessionRepository
     ) {
         super();
+        this.credentialRepository = _credentialRepository;
+        this.sessionRepository = _sessionRepository;
     }
 
     async execute(data: LoginInputDTO): Promise<LoginOutputDTO> {
 
-        const credential = await this._credentialRepository.selectByEmail(data.email);
+        const credential = await this.credentialRepository.selectByEmail(data.email);
 
         if (!(credential && await credential?.validatePassword(data.password))) {
             throw Error("Invalid Credentials");
@@ -29,8 +34,8 @@ export class LoginUseCase extends ILoginUseCase {
         const expirationDate = new Date();
         expirationDate.setMinutes(expirationDate.getMinutes() + 30);
 
-        const sessionId = await this._sessionRepository.add(new SessionEntity(null, credential.subjectId, expirationDate));
+        const sessionId = await this.sessionRepository.add(new SessionEntity(undefined, credential.subjectId, expirationDate));
 
-        return { sessionId: credential?.subjectId } as LoginOutputDTO;
+        return { sessionId: sessionId } as LoginOutputDTO;
     }
 }

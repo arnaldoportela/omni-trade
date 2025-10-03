@@ -9,19 +9,25 @@ import { PostRoutesMiddlewareConfigurator } from "./middlewares/PostRoutesMiddle
 @Injectable()
 export class App {
   private readonly app: Express;
+  private readonly routesConfigurator: RoutesConfigurator;
+  private readonly preRoutesMiddlewareConfigurator: PreRoutesMiddlewareConfigurator;
+  private readonly postRoutesMiddlewareConfigurator: PostRoutesMiddlewareConfigurator;
 
   constructor(
-    private _routesConfigurator: RoutesConfigurator,
-    private _preRoutesMiddlewareConfigurator: PreRoutesMiddlewareConfigurator,
-    private _postRoutesMiddlewareConfigurator: PostRoutesMiddlewareConfigurator
+    _routesConfigurator: RoutesConfigurator,
+    _preRoutesMiddlewareConfigurator: PreRoutesMiddlewareConfigurator,
+    _postRoutesMiddlewareConfigurator: PostRoutesMiddlewareConfigurator
   ) {
     this.app = express();
+    this.routesConfigurator = _routesConfigurator;
+    this.preRoutesMiddlewareConfigurator = _preRoutesMiddlewareConfigurator;
+    this.postRoutesMiddlewareConfigurator = _postRoutesMiddlewareConfigurator;
   }
 
   public build(): Express {
-    this._preRoutesMiddlewareConfigurator.register(this.app);
-    this._routesConfigurator.register(this.app);
-    this._postRoutesMiddlewareConfigurator.register(this.app);
+    this.preRoutesMiddlewareConfigurator.register(this.app);
+    this.routesConfigurator.register(this.app);
+    this.postRoutesMiddlewareConfigurator.register(this.app);
 
     return this.app;
   }

@@ -9,8 +9,11 @@ import { LoginInputDTO } from '@application/auth/dtos/input/LoginInputDto';
 @Injectable()
 export class LoginController extends ILoginController{
 
-    constructor(private _loginUseCase: ILoginUseCase) { 
+    private readonly loginUseCase: ILoginUseCase;
+
+    constructor(_loginUseCase: ILoginUseCase) { 
         super();
+        this.loginUseCase = _loginUseCase;
     }
 
     public async post(req: Request, res: Response): Promise<Response> {
@@ -20,7 +23,7 @@ export class LoginController extends ILoginController{
             password: req.body.password
         }
 
-        const result = await this._loginUseCase.execute(input);
+        const result = await this.loginUseCase.execute(input);
 
         return res.status(200)
             .cookie("sessionId", result.sessionId, { 

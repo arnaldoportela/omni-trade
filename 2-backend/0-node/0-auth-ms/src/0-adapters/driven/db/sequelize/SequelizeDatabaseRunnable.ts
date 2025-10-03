@@ -15,9 +15,10 @@ const models: any[] = [
 
 export class SequelizeDatabaseRunnable implements Runnable {
     private sequelize!: Sequelize;
+    private readonly connectionString: string
 
-    constructor(private readonly connectionString: string) {
-
+    constructor(_connectionString: string) {
+        this.connectionString = _connectionString;
     }
 
     async start(): Promise<void> {

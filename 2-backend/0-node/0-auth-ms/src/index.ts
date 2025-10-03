@@ -2,12 +2,9 @@ import "reflect-metadata";
 import dotenv from "dotenv";
 
 import { IoCContainer } from "./3-crosscutting/ioc/IoCContainer";
-
-import { DomainDI } from "./2-domain/DomainDI";
 import { ApplicationDI } from "./1-application/ApplicationDI";
 import { SequelizeDBDrivenAdapterDI } from "./0-adapters/driven/db/sequelize/SequelizeDBDrivenAdapterDI";
 import { ExpressHttpDrivingAdapterDI } from "./0-adapters/driving/http/express/ExpressHttpDrivingAdapterDI";
-
 import { SequelizeDatabaseRunnable } from "./0-adapters/driven/db/sequelize/SequelizeDatabaseRunnable";
 import { ExpressServerRunnable } from "./0-adapters/driving/http/express/ExpressServerRunnable";
 
@@ -20,20 +17,27 @@ class CompositionRoot {
         this.container = IoCContainer.getInstance();
     }
 
-    public bootstrap() {
-        DomainDI.register(this.container);
+    public async bootstrap(): Promise<void> {
         ApplicationDI.register(this.container);
         SequelizeDBDrivenAdapterDI.register(this.container);
         ExpressHttpDrivingAdapterDI.register(this.container);
 
-        new SequelizeDatabaseRunnable(
-            process.env.CONNECTION_STRING || ""
+        await new SequelizeDatabaseRunnable(
+            process.env.CONNECTION_STRING ?? ""
         ).start();
 
-        new ExpressServerRunnable(
+        await new ExpressServerRunnable(
             Number(process.env.APPLICATION__PORT)
         ).start();
     }
 }
 
-new CompositionRoot().bootstrap();
+async function main() {
+  await new CompositionRoot().bootstrap();
+}
+
+
+main().catch((err) => {
+  console.error("Fatal error while bootstrapping app:", err);
+  process.exit(1);
+});

@@ -4,10 +4,12 @@ import { Runnable } from "../../../../3-crosscutting/Runnable";
 import { IoCContainer } from "../../../../3-crosscutting/ioc/IoCContainer";
 
 export class ExpressServerRunnable implements Runnable {
-  private httpServer: http.Server;
+  private readonly port: number
+  private readonly httpServer: http.Server;
   private readonly _app: App;
 
-  constructor(private readonly port: number) {
+  constructor(_port: number) {
+    this.port = _port;
     this._app = IoCContainer.getInstance().resolve(App)
     this.httpServer = http.createServer(this._app.build());
   }
