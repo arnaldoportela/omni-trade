@@ -35,7 +35,7 @@ export default [
             "@typescript-eslint/no-unused-vars": "warn",
             "@typescript-eslint/explicit-function-return-type": "off",
             "@typescript-eslint/no-floating-promises": "warn",
-            "@typescript-eslint/no-explicit-any": "warn",
+            "@typescript-eslint/no-explicit-any": "off",
             "@typescript-eslint/await-thenable": "warn",
             "@typescript-eslint/consistent-type-imports": "warn",
             "@typescript-eslint/require-await": "warn",

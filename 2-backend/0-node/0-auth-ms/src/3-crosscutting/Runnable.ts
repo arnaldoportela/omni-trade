@@ -1,7 +1,7 @@
-export interface Startable {
+export interface IStartable {
   start(): Promise<void>;
 }
-export interface Stoppable {
+export interface IStoppable {
   stop(): Promise<void>;
 }
-export type Runnable = Startable & Stoppable;
+export type Runnable = IStartable & IStoppable;

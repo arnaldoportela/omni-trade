@@ -1,10 +1,10 @@
 // IoCServiceDescriptor.ts
 import "reflect-metadata";
-import { IoCContainer } from "./IoCContainer";
+import type { IoCContainer } from "./IoCContainer";
 import { IoCServiceLifetimeEnum } from "./IoCServiceLifetimeEnum";
-import { Constructor, AbstractConstructor } from "./IoCTypes";
+import type { Constructor, AbstractConstructor } from "./IoCTypes";
 
-export class IoCServiceDescriptor<T = any> {
+export class IoCServiceDescriptor<T> {
   private serviceType: Constructor<T> | AbstractConstructor<T>;
   private implementationType: Constructor<T>;
   private implementation: T | null = null;
@@ -70,10 +70,7 @@ export class IoCServiceDescriptor<T = any> {
   public getImplementation(): T {
     switch (this.lifetime) {
       case IoCServiceLifetimeEnum.SINGLETON:
-        if (!this.implementation) {
-          this.implementation = this.createInstance(this.implementationType);
-        }
-        return this.implementation;
+        return this.implementation ?? this.createInstance(this.implementationType);
 
       case IoCServiceLifetimeEnum.TRANSIENT:
         return this.createInstance(this.implementationType);
@@ -84,7 +81,7 @@ export class IoCServiceDescriptor<T = any> {
   }
 
   private createInstance<U>(ctor: Constructor<U>): U {
-    const paramTypes: Constructor[] = Reflect.getMetadata("design:paramtypes", ctor) || [];
+    const paramTypes: Constructor[] = Reflect.getMetadata("design:paramtypes", ctor) ?? [];
     const params = paramTypes.map(dep => this.container.resolve(dep));
     return new ctor(...params);
   }

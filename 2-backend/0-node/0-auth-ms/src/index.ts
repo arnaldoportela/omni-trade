@@ -7,6 +7,7 @@ import { SequelizeDBDrivenAdapterDI } from "./0-adapters/driven/db/sequelize/Seq
 import { ExpressHttpDrivingAdapterDI } from "./0-adapters/driving/http/express/ExpressHttpDrivingAdapterDI";
 import { SequelizeDatabaseRunnable } from "./0-adapters/driven/db/sequelize/SequelizeDatabaseRunnable";
 import { ExpressServerRunnable } from "./0-adapters/driving/http/express/ExpressServerRunnable";
+import { OpenTelemetryRunnable } from "@adapters/driven/observability/openTelemetry/OpenTelemetryRunnable";
 
 dotenv.config();
 
@@ -21,6 +22,9 @@ class CompositionRoot {
         ApplicationDI.register(this.container);
         SequelizeDBDrivenAdapterDI.register(this.container);
         ExpressHttpDrivingAdapterDI.register(this.container);
+
+        await new OpenTelemetryRunnable()
+            .start();
 
         await new SequelizeDatabaseRunnable(
             process.env.CONNECTION_STRING ?? ""

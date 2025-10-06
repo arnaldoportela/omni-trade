@@ -1,9 +1,9 @@
 // IoCContainer.ts
 import { IoCServiceDescriptor } from "./IoCServiceDescriptor";
 import { IoCServiceLifetimeEnum } from "./IoCServiceLifetimeEnum";
-import { Constructor, AbstractConstructor } from "./IoCTypes";
+import type { Constructor, AbstractConstructor } from "./IoCTypes";
 
-export interface Registration<T = any> {
+export interface IRegistration<T = any> {
   service: Constructor<T> | AbstractConstructor<T>;
   useClass?: Constructor<T>;
   useValue?: T;
@@ -21,7 +21,7 @@ export class IoCContainer {
     return this._container;
   }
 
-  public register<T>(spec: Registration<T>): IoCServiceDescriptor<T> {
+  public register<T>(spec: IRegistration<T>): IoCServiceDescriptor<T> {
     this.throwIfExists(spec.service);
 
     let desc: IoCServiceDescriptor<T>;

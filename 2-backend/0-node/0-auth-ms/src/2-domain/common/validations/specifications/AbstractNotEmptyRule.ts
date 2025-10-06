@@ -1,7 +1,8 @@
-import { IRule } from "./IRule";
 import { ValidationError } from "../ValidationError";
 
-export abstract class NotEmptyRule<T> extends IRule<T> {
+import { AbstractRuleBase } from "./AbstractRuleBase";
+
+export abstract class AbstractNotEmptyRule<T> extends AbstractRuleBase<T> {
 
     public readonly field: keyof T; 
     private readonly message: string;

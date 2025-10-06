@@ -1,5 +1,5 @@
-export abstract class Validator<T>{
-    protected abstract rules: IRule<T>[];
+export abstract class AbstractValidator<T>{
+    protected abstract rules: AbstractRuleBase<T>[];
 
     validate(object: T): ValidationError[] {
         const errors: ValidationError[] = [];
