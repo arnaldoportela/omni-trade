@@ -2,14 +2,14 @@ import { Injectable } from "../../../3-crosscutting/ioc/InjectableDecorator";
 
 import { LoginInputDTO } from "../dtos/input/LoginInputDto";
 
-import { ILoginUseCase } from "./ports/ILoginUsecase";
+import { AbstractLoginUseCase } from "./ports/AbstractLoginUsecase";
 import { LoginOutputDTO } from "../dtos/output/LoginOutputDto";
 import { ICredentialRepository } from "@domain/auth/ports/repositories/ICredentialRepository";
 import { ISessionRepository } from "@domain/auth/ports/repositories/ISessionRepository";
 import { SessionEntity } from "@domain/auth/entities/SessionEntity";
 
 @Injectable()
-export class LoginUseCase extends ILoginUseCase {
+export class LoginUseCase extends AbstractLoginUseCase {
 
     private readonly credentialRepository: ICredentialRepository;
     private readonly sessionRepository: ISessionRepository;
@@ -27,6 +27,7 @@ export class LoginUseCase extends ILoginUseCase {
 
         const credential = await this.credentialRepository.selectByEmail(data.email);
 
+        //TODO: Standarize errors
         if (!(credential && await credential?.validatePassword(data.password))) {
             throw Error("Invalid Credentials");
         }

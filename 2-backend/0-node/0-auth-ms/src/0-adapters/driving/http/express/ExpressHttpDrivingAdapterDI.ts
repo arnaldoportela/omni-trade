@@ -1,9 +1,9 @@
 import { IoCContainer } from "../../../../3-crosscutting/ioc/IoCContainer";
 
-import { ILoginController } from "./controllers/auth/abstractions/v1/ILoginController";
-import { IRegisterController } from "./controllers/auth/abstractions/v1/IRegisterController";
-import { ILogoutController } from "./controllers/auth/abstractions/v1/ILogoutController";
-import { IValidateController } from "./controllers/auth/abstractions/v1/IValidateController";
+import { AbstractLoginController } from "./controllers/auth/abstractions/v1/AbstractLoginController";
+import { AbstractRegisterController } from "./controllers/auth/abstractions/v1/AbstractRegisterController";
+import { AbstractLogoutController } from "./controllers/auth/abstractions/v1/AbstractLogoutController";
+import { AbstractValidateController } from "./controllers/auth/abstractions/v1/AbstractValidateController";
 
 import { LoginController } from "./controllers/auth/v1/LoginController";
 import { RegisterController } from "./controllers/auth/v1/RegisterController";
@@ -16,17 +16,20 @@ import { RoutesConfigurator } from "./routes/RoutesConfigurator";
 import { PreRoutesMiddlewareConfigurator } from "./middlewares/PreRoutesMiddlewareConfigurator";
 import { PostRoutesMiddlewareConfigurator } from "./middlewares/PostRoutesMiddlewareConfigurator";
 import { App } from "./App";
+import { AbstractChangePasswordController } from "./controllers/auth/abstractions/v1/AbstractChangePasswordController";
+import { ChangePasswordController } from "./controllers/auth/v1/ChangePasswordController";
 
 export class ExpressHttpDrivingAdapterDI {
     public static register(container: IoCContainer): void {
-        container.register({ service: ILoginController, useClass: LoginController });
-        container.register({ service: IRegisterController, useClass: RegisterController });
-        container.register({ service: ILogoutController, useClass: LogoutController });
-        container.register({ service: IValidateController, useClass: ValidateController });
+        container.register({ service: AbstractLoginController, useClass: LoginController });
+        container.register({ service: AbstractRegisterController, useClass: RegisterController });
+        container.register({ service: AbstractLogoutController, useClass: LogoutController });
+        container.register({ service: AbstractValidateController, useClass: ValidateController });
+        container.register({ service: AbstractChangePasswordController, useClass: ChangePasswordController });
         container.register({ service: AuthV1Routes });
         container.register({ service: RoutesConfigurator });
         container.register({ service: PreRoutesMiddlewareConfigurator });
-        container.register({ service: PostRoutesMiddlewareConfigurator});
+        container.register({ service: PostRoutesMiddlewareConfigurator });
         container.register({ service: App });
     }
 }

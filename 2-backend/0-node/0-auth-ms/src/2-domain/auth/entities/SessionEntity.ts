@@ -1,6 +1,6 @@
-import { IAuditableEntity } from "./IAuditableEntity";
+import { AbstractAuditableEntity } from "./abstractions/AbstractAuditableEntity";
 
-export class SessionEntity extends IAuditableEntity {
+export class SessionEntity extends AbstractAuditableEntity {
 
     public id: string | undefined;
     public subjectId: string | undefined;

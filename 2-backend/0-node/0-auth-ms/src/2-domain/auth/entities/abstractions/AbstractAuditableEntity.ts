@@ -1,6 +1,6 @@
-import { IEntity } from "./IEntity";
+import { AbstractEntity } from "./AbstractEntity";
 
-export class IAuditableEntity extends IEntity{
+export abstract class AbstractAuditableEntity extends AbstractEntity{
 
     constructor(
         public id: string | undefined,

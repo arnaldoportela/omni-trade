@@ -1,18 +1,18 @@
 import { Request, Response } from "express";
 
 import { RegisterInputDTO } from "@application/auth/dtos/input/RegisterInputDto";
-import { IRegisterUseCase } from "@application/auth/useCases/ports/IRegisterUsecase";
+import { AbstractRegisterUseCase } from "@application/auth/useCases/ports/AbstractRegisterUsecase";
 
 import { Injectable } from "@crosscutting/ioc/InjectableDecorator";
 
-import { IRegisterController } from "../abstractions/v1/IRegisterController";
+import { AbstractRegisterController } from "../abstractions/v1/AbstractRegisterController";
 
 @Injectable()
-export class RegisterController extends IRegisterController {
+export class RegisterController extends AbstractRegisterController {
 
-    private readonly registerUseCase: IRegisterUseCase;
+    private readonly registerUseCase: AbstractRegisterUseCase;
  
-    constructor(_registerUseCase: IRegisterUseCase) {
+    constructor(_registerUseCase: AbstractRegisterUseCase) {
         super();
         this.registerUseCase = _registerUseCase;
     }

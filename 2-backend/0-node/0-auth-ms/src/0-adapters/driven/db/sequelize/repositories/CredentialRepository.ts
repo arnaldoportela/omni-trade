@@ -42,9 +42,11 @@ export class CredentialRepository extends ICredentialRepository {
         return credential?.toEntity() ?? null;
     }
 
-    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
     public async add(entity: CredentialEntity): Promise<string> {
-        return "";
+        const model = new Credential().fromEntity(entity);
+        const e: any = await Credential.create(model);
+
+        return e.id;
     }
 
     // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
@@ -52,8 +54,9 @@ export class CredentialRepository extends ICredentialRepository {
 
     }
 
-    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
     public async delete(id: string): Promise<void> {
-
+        await Credential.destroy({
+            where: { id }
+        })
     }
 }

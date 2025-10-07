@@ -1,11 +1,11 @@
 import { Sequelize } from "sequelize";
-import config from "../../../../../db/config/config";
+import config from "../../../../../db/sequelize/config/config";
 
 import { Subject } from "./models/Subject";
 import { Credential } from "./models/Credential";
 import { Session } from "./models/Session";
 
-import { Runnable } from "../../../../3-crosscutting/Runnable";
+import { Runnable } from "@crosscutting/Runnable";
 
 const models: any[] = [
     Subject,

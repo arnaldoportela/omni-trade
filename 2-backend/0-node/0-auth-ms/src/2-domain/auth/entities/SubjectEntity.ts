@@ -1,8 +1,8 @@
 import { CredentialEntity } from "./CredentialEntity";
-import { IAuditableEntity } from "./IAuditableEntity";
+import { AbstractAuditableEntity } from "./abstractions/AbstractAuditableEntity";
 import { SessionEntity } from "./SessionEntity";
 
-export class SubjectEntity extends IAuditableEntity {
+export class SubjectEntity extends AbstractAuditableEntity {
 
     public id: string | undefined;
     public name: string;

@@ -2,23 +2,23 @@ import { Request, Response } from 'express';
 
 import { Injectable } from '@crosscutting/ioc/InjectableDecorator';
 
-import { ILoginController } from '../abstractions/v1/ILoginController';
-import { ILoginUseCase } from '@application/auth/useCases/ports/ILoginUsecase';
+import { AbstractLoginController } from '../abstractions/v1/AbstractLoginController';
+import { AbstractLoginUseCase } from '@application/auth/useCases/ports/AbstractLoginUsecase';
 import { LoginInputDTO } from '@application/auth/dtos/input/LoginInputDto';
 
 @Injectable()
-export class LoginController extends ILoginController{
+export class LoginController extends AbstractLoginController{
 
-    private readonly loginUseCase: ILoginUseCase;
+    private readonly loginUseCase: AbstractLoginUseCase;
 
-    constructor(_loginUseCase: ILoginUseCase) { 
+    constructor(_loginUseCase: AbstractLoginUseCase) { 
         super();
         this.loginUseCase = _loginUseCase;
     }
 
     public async post(req: Request, res: Response): Promise<Response> {
 
-        const input: LoginInputDTO ={
+        const input: LoginInputDTO = {
             email: req.body.email,
             password: req.body.password
         }

@@ -1,7 +1,7 @@
 import argon2 from "argon2";
-import { IAuditableEntity } from "./IAuditableEntity";
+import { AbstractAuditableEntity } from "./abstractions/AbstractAuditableEntity";
 
-export class CredentialEntity extends IAuditableEntity {
+export class CredentialEntity extends AbstractAuditableEntity {
 
     public id: string | undefined;
     public subjectId: string | undefined;
