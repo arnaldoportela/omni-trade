@@ -16,7 +16,7 @@ export class SwaggerMiddleware {
         const sections = this.getDirectories(path.join(__dirname, "../../swagger"));
 
         base.servers = [{
-            url: `${process.env.APPLICATION__PROTOCOL}://${process.env.APPLICATION__HOST}:${process.env.APPLICATION__PORT}`
+            url: `${process.env.APP_PROTOCOL}://${process.env.APP_HOST}:${process.env.APP_PORT}`
         }];
 
         sections.forEach((section) => {

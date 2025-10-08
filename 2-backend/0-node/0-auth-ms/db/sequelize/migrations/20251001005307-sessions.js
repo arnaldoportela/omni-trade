@@ -18,7 +18,16 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL'
       },
-      expiresAt: {
+      fingerprint: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      idleExpireDate: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.NOW,
+      },
+      maxExpireDate: {
         type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.NOW,

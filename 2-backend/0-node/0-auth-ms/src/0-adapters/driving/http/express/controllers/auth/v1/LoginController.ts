@@ -20,7 +20,8 @@ export class LoginController extends AbstractLoginController{
 
         const input: LoginInputDTO = {
             email: req.body.email,
-            password: req.body.password
+            password: req.body.password,
+            fingerprint: req.headers['user-agent'] ?? ''
         }
 
         const result = await this.loginUseCase.execute(input);

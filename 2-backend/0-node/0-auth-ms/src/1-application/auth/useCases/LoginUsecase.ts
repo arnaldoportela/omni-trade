@@ -35,7 +35,12 @@ export class LoginUseCase extends AbstractLoginUseCase {
         const expirationDate = new Date();
         expirationDate.setMinutes(expirationDate.getMinutes() + 30);
 
-        const sessionId = await this.sessionRepository.add(new SessionEntity(undefined, credential.subjectId, expirationDate));
+        const sessionId = await this.sessionRepository.add(new SessionEntity(
+            undefined,
+            credential.subjectId,
+            data.fingerprint ?? 'Test',
+            expirationDate,
+            expirationDate));
 
         return { sessionId: sessionId } as LoginOutputDTO;
     }

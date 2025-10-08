@@ -7,5 +7,6 @@ export function errorHandlerMiddleware(
     //eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
     /* required by Express */ next: NextFunction 
 ): void {
+    console.log('ERROR: ', error)
     res.status(501).json({ message: "Internal Server Error" });
 }

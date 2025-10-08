@@ -1,17 +1,28 @@
 import { Sequelize } from "sequelize";
-import config from "../../../../../db/sequelize/config/config";
 
 import { Subject } from "./models/Subject";
 import { Credential } from "./models/Credential";
 import { Session } from "./models/Session";
 
 import { Runnable } from "@crosscutting/Runnable";
+import { SequelizeOptions } from "sequelize-typescript";
 
 const models: any[] = [
     Subject,
     Credential,
     Session
 ];
+
+const sequelizeOptions: SequelizeOptions = {
+    dialect: "postgres",
+    timezone: "+00:00",
+    define: {
+        timestamps: true,
+    },
+    dialectOptions: {
+        useUTC: true
+    },
+}
 
 export class SequelizeDatabaseRunnable implements Runnable {
     private sequelize!: Sequelize;
@@ -22,9 +33,9 @@ export class SequelizeDatabaseRunnable implements Runnable {
     }
 
     async start(): Promise<void> {
-        this.sequelize = new Sequelize(this.connectionString, config);
-        models.forEach((model:any) => model.setup(this.sequelize));
-        models.forEach((model:any) => model.associate && model.associate(this.sequelize.models));
+        this.sequelize = new Sequelize(this.connectionString, sequelizeOptions);
+        models.forEach((model: any) => model.setup(this.sequelize));
+        models.forEach((model: any) => model.associate && model.associate(this.sequelize.models));
     }
     async stop(): Promise<void> {
         if (this.sequelize) await this.sequelize.close();

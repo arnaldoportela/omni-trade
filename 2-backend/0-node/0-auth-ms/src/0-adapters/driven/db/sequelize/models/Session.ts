@@ -9,13 +9,15 @@ export class Session extends IModel<SessionEntity> {
         return {
             id: entity.id ?? undefined,
             subjectId: entity.subjectId ?? undefined,
-            expiresAt: entity.expiresAt
+            fingerprint: entity.fingerprint,
+            idleExpireDate: entity.idleExpiresDate,
+            maxExpireDate: entity.maxExpiresDate
         };
     }
 
     public toEntity(): SessionEntity {
         const obj = (this as any);
-        return new SessionEntity(obj.id, obj.subjectId, obj.expiresAt, obj.createdAt, obj.updatedAt);
+        return new SessionEntity(obj.id, obj.subjectId, obj.fingerprint, obj.idleExpireDate, obj.maxExpireDate, obj.createdAt, obj.updatedAt);
     }
 
     static setup(sequelize: Sequelize): void {
@@ -28,7 +30,15 @@ export class Session extends IModel<SessionEntity> {
                 type: DataTypes.UUID,
                 allowNull: false
             },
-            expiresAt: {
+            fingerprint: {
+                type: DataTypes.STRING,
+                allowNull: false
+            },
+            idleExpireDate: {
+                type: DataTypes.DATE,
+                allowNull: false
+            },
+            maxExpireDate: {
                 type: DataTypes.DATE,
                 allowNull: false
             }

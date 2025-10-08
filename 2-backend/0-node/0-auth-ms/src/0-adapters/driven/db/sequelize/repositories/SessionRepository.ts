@@ -14,7 +14,9 @@ export class SessionRepository extends ISessionRepository {
                 new SessionEntity(
                     _.id,
                     _.subjectId,
-                    _.expiresAt,
+                    _.finferprint,
+                    _.idleExpireDate,
+                    _.maxExpireDate,
                     _.createdAt,
                     _.updatedAt
                 )

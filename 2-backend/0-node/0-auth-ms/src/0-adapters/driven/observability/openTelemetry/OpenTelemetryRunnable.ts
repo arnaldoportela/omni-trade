@@ -12,9 +12,9 @@ export class OpenTelemetryRunnable implements Runnable {
     constructor() {
         this.sdk = new NodeSDK({
             traceExporter: new ConsoleSpanExporter(),
-            metricReader: new PeriodicExportingMetricReader({
-                exporter: new ConsoleMetricExporter()
-            }),
+            // metricReader: new PeriodicExportingMetricReader(
+            //     // {exporter: new ConsoleMetricExporter()}
+            // ),
             instrumentations: [getNodeAutoInstrumentations()]
         });    
     }
