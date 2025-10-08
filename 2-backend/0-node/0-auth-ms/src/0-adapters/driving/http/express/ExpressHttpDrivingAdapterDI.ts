@@ -18,9 +18,13 @@ import { PostRoutesMiddlewareConfigurator } from "./middlewares/PostRoutesMiddle
 import { App } from "./App";
 import { AbstractChangePasswordController } from "./controllers/auth/abstractions/v1/AbstractChangePasswordController";
 import { ChangePasswordController } from "./controllers/auth/v1/ChangePasswordController";
+import { CookieOptionsBuilder } from "./utils/CookieOptionsBuilder";
+import { IoCServiceLifetimeEnum } from "@crosscutting/ioc/IoCServiceLifetimeEnum";
 
 export class ExpressHttpDrivingAdapterDI {
     public static register(container: IoCContainer): void {
+
+        container.register({ service: CookieOptionsBuilder, lifetime: IoCServiceLifetimeEnum.TRANSIENT });
         container.register({ service: AbstractLoginController, useClass: LoginController });
         container.register({ service: AbstractRegisterController, useClass: RegisterController });
         container.register({ service: AbstractLogoutController, useClass: LogoutController });

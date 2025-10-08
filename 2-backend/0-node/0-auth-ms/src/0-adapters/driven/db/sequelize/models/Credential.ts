@@ -5,7 +5,7 @@ import { CredentialEntity } from '@domain/auth/entities/CredentialEntity';
 
 export class Credential extends IModel<CredentialEntity> {
 
-    public fromEntity(entity: CredentialEntity): any{
+    public async fromEntity(entity: CredentialEntity): Promise<any>{
         return {
             id: entity.id ?? undefined,
             subjectId: entity.subjectId ?? undefined,
@@ -14,7 +14,7 @@ export class Credential extends IModel<CredentialEntity> {
         };
     }
 
-    public toEntity(): CredentialEntity{
+    public async toEntity(factory: any): Promise<CredentialEntity>{
         const obj = (this as any);
         return new CredentialEntity(obj.id, obj.subjectId, obj.email, obj.passwordHash, obj.createdAt, obj.updatedAt);
     }

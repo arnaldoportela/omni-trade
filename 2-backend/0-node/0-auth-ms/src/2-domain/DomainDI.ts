@@ -1,8 +1,9 @@
 import { IoCContainer } from "../3-crosscutting/ioc/IoCContainer";
-import { AuthDomainDI } from "./auth/AuthDomainDI";
+import { SessionFactory } from "./auth/factories/SessionFactory";
+
 
 export class DomainDI {
     public static register(container: IoCContainer): void {
-        AuthDomainDI.register(container);
+        container.register({ service: SessionFactory });
     }
 }

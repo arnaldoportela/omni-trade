@@ -11,7 +11,7 @@ export class SessionRepository extends ISessionRepository {
 
         sessions.forEach((_: any) => {
             entities.push(
-                new SessionEntity(
+                SessionEntity.create(
                     _.id,
                     _.subjectId,
                     _.finferprint,
@@ -32,7 +32,7 @@ export class SessionRepository extends ISessionRepository {
     }
 
     public async add(entity: SessionEntity): Promise<string> {
-        const model = new Session().fromEntity(entity);
+        const model = await new Session().fromEntity(entity);
         const e: any = await Session.create(model);
 
         return e.id;

@@ -7,20 +7,24 @@ import { LoginOutputDTO } from "../dtos/output/LoginOutputDto";
 import { ICredentialRepository } from "@domain/auth/ports/repositories/ICredentialRepository";
 import { ISessionRepository } from "@domain/auth/ports/repositories/ISessionRepository";
 import { SessionEntity } from "@domain/auth/entities/SessionEntity";
+import { SessionFactory } from "@domain/auth/factories/SessionFactory";
 
 @Injectable()
 export class LoginUseCase extends AbstractLoginUseCase {
 
     private readonly credentialRepository: ICredentialRepository;
     private readonly sessionRepository: ISessionRepository;
+    private readonly sessionFactory: SessionFactory;
 
     constructor(
         _credentialRepository: ICredentialRepository,
-        _sessionRepository: ISessionRepository
+        _sessionRepository: ISessionRepository,
+        _sessionFactory: SessionFactory
     ) {
         super();
         this.credentialRepository = _credentialRepository;
         this.sessionRepository = _sessionRepository;
+        this.sessionFactory = _sessionFactory;
     }
 
     async execute(data: LoginInputDTO): Promise<LoginOutputDTO> {
@@ -35,12 +39,14 @@ export class LoginUseCase extends AbstractLoginUseCase {
         const expirationDate = new Date();
         expirationDate.setMinutes(expirationDate.getMinutes() + 30);
 
-        const sessionId = await this.sessionRepository.add(new SessionEntity(
+        const entity = await this.sessionFactory.create(
             undefined,
             credential.subjectId,
-            data.fingerprint ?? 'Test',
+            data.userAgent ?? 'Test',
             expirationDate,
-            expirationDate));
+            expirationDate);
+        
+        const sessionId = await this.sessionRepository.add(entity);
 
         return { sessionId: sessionId } as LoginOutputDTO;
     }

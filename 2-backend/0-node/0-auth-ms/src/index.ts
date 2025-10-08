@@ -8,6 +8,8 @@ import { SequelizeDatabaseRunnable } from "./0-adapters/driven/db/sequelize/Sequ
 import { ExpressServerRunnable } from "./0-adapters/driving/http/express/ExpressServerRunnable";
 import { OpenTelemetryRunnable } from "@adapters/driven/observability/openTelemetry/OpenTelemetryRunnable";
 import { Config } from "@crosscutting/config/Config";
+import { CrosscuttingDI } from "@crosscutting/CrosscuttingDI";
+import { DomainDI } from "@domain/DomainDI";
 
 class CompositionRoot {
     private readonly container: IoCContainer;
@@ -20,6 +22,8 @@ class CompositionRoot {
     }
 
     public async bootstrap(): Promise<void> {
+        CrosscuttingDI.register(this.container);
+        DomainDI.register(this.container);
         ApplicationDI.register(this.container);
         SequelizeDBDrivenAdapterDI.register(this.container);
         ExpressHttpDrivingAdapterDI.register(this.container);

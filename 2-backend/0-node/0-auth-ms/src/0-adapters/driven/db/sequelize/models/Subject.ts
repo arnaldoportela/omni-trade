@@ -6,7 +6,7 @@ import { Credential } from './Credential';
 import { Session } from './Session';
 
 export class Subject extends IModel<SubjectEntity> {
-    public fromEntity(entity: SubjectEntity): any {
+    public async fromEntity(entity: SubjectEntity): Promise<any> {
         return {
             id: entity.id ?? undefined,
             name: entity.name,
@@ -15,7 +15,7 @@ export class Subject extends IModel<SubjectEntity> {
         };
     }
 
-    public toEntity(): SubjectEntity {
+    public async toEntity(factory: any): Promise<SubjectEntity> {
         const obj = (this as any);
         return new SubjectEntity(obj.id, obj.name, [], [], obj.createdAt, obj.updatedAt);
     }
