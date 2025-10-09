@@ -1,8 +1,8 @@
 import { Injectable } from "@crosscutting/ioc/InjectableDecorator";
-import { IRepository } from "./IRepository";
+import { AbstractRepository } from "./AbstractRepository";
 import { SubjectEntity } from "@domain/auth/entities/SubjectEntity";
 
 @Injectable()
-export abstract class ISubjectRepository extends IRepository<SubjectEntity>{
+export abstract class AbstractSubjectRepository extends AbstractRepository<SubjectEntity>{
 
 }

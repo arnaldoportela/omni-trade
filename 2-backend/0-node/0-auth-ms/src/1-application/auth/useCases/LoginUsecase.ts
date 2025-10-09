@@ -4,21 +4,21 @@ import { LoginInputDTO } from "../dtos/input/LoginInputDto";
 
 import { AbstractLoginUseCase } from "./ports/AbstractLoginUsecase";
 import { LoginOutputDTO } from "../dtos/output/LoginOutputDto";
-import { ICredentialRepository } from "@domain/auth/ports/repositories/ICredentialRepository";
-import { ISessionRepository } from "@domain/auth/ports/repositories/ISessionRepository";
+import { AbstractCredentialRepository } from "@domain/auth/ports/repositories/AbstractCredentialRepository";
+import { AbstractSessionRepository } from "@domain/auth/ports/repositories/AbstractSessionRepository";
 import { SessionEntity } from "@domain/auth/entities/SessionEntity";
 import { SessionFactory } from "@domain/auth/factories/SessionFactory";
 
 @Injectable()
 export class LoginUseCase extends AbstractLoginUseCase {
 
-    private readonly credentialRepository: ICredentialRepository;
-    private readonly sessionRepository: ISessionRepository;
+    private readonly credentialRepository: AbstractCredentialRepository;
+    private readonly sessionRepository: AbstractSessionRepository;
     private readonly sessionFactory: SessionFactory;
 
     constructor(
-        _credentialRepository: ICredentialRepository,
-        _sessionRepository: ISessionRepository,
+        _credentialRepository: AbstractCredentialRepository,
+        _sessionRepository: AbstractSessionRepository,
         _sessionFactory: SessionFactory
     ) {
         super();

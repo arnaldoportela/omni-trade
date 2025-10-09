@@ -1,6 +1,6 @@
 import argon2 from 'argon2';
 
-import { ICredentialRepository } from '@domain/auth/ports/repositories/ICredentialRepository';
+import { AbstractCredentialRepository } from '@domain/auth/ports/repositories/AbstractCredentialRepository';
 import { Injectable } from '@crosscutting/ioc/InjectableDecorator';
 
 import { ChangePasswordInputDto } from '../dtos/input/ChangePasswordInputDto';
@@ -9,9 +9,9 @@ import { CredentialEntity } from '@domain/auth/entities/CredentialEntity';
 
 @Injectable()
 export class ChangePasswordUseCase extends AbstractChangePasswordUseCase {
-    private readonly credentialRepository: ICredentialRepository;
+    private readonly credentialRepository: AbstractCredentialRepository;
 
-    constructor(_credentialRepository: ICredentialRepository) {
+    constructor(_credentialRepository: AbstractCredentialRepository) {
         super();
 
         this.credentialRepository = _credentialRepository;

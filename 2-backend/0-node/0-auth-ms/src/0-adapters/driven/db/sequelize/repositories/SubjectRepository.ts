@@ -1,11 +1,11 @@
-import { ISubjectRepository } from "@domain/auth/ports/repositories/ISubjectRepository";
+import { AbstractSubjectRepository } from "@domain/auth/ports/repositories/AbstractSubjectRepository";
 import { Subject } from "../models/Subject";
 import { SubjectEntity } from "@domain/auth/entities/SubjectEntity";
 import { Injectable } from "@crosscutting/ioc/InjectableDecorator";
 import { Credential } from "../models/Credential";
 
 @Injectable()
-export class SubjectRepository extends ISubjectRepository {
+export class SubjectRepository extends AbstractSubjectRepository {
     public async selectAll(): Promise<SubjectEntity[]> {
         const entities: SubjectEntity[] = [];
         const subjects = await Subject.findAll();
@@ -32,7 +32,7 @@ export class SubjectRepository extends ISubjectRepository {
     }
 
     public async add(entity: SubjectEntity): Promise<string> {
-        const model = new Subject().fromEntity(entity);
+        const model = await new Subject().fromEntity(entity);
         const e:any = await Subject.create(model,
             {
                 include: [

@@ -1,11 +1,11 @@
 import { CredentialEntity } from "@domain/auth/entities/CredentialEntity";
-import { ICredentialRepository } from "@domain/auth/ports/repositories/ICredentialRepository";
+import { AbstractCredentialRepository } from "@domain/auth/ports/repositories/AbstractCredentialRepository";
 import { Credential } from "../models/Credential";
 import { Injectable } from "@crosscutting/ioc/InjectableDecorator";
 import { Subject } from "../models/Subject";
 
 @Injectable()
-export class CredentialRepository extends ICredentialRepository {
+export class CredentialRepository extends AbstractCredentialRepository {
     public async selectAll(): Promise<CredentialEntity[]> {
         const entities: CredentialEntity[] = [];
         const credentials = await Credential.findAll();
@@ -39,11 +39,11 @@ export class CredentialRepository extends ICredentialRepository {
             ]
         });
 
-        return credential?.toEntity() ?? null;
+        return credential?.toEntity(null) ?? null;
     }
 
     public async add(entity: CredentialEntity): Promise<string> {
-        const model = new Credential().fromEntity(entity);
+        const model = await new Credential().fromEntity(entity);
         const e: any = await Credential.create(model);
 
         return e.id;

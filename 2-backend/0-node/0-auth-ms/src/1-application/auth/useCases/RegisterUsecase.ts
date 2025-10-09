@@ -1,6 +1,6 @@
 import argon2 from "argon2";
 
-import { ISubjectRepository } from "@domain/auth/ports/repositories/ISubjectRepository";
+import { AbstractSubjectRepository } from "@domain/auth/ports/repositories/AbstractSubjectRepository";
 import { Injectable } from "@crosscutting/ioc/InjectableDecorator";
 
 import { RegisterInputDTO } from "../dtos/input/RegisterInputDto";
@@ -12,9 +12,9 @@ import { CredentialEntity } from "@domain/auth/entities/CredentialEntity";
 @Injectable()
 export class RegisterUseCase extends AbstractRegisterUseCase {
 
-    private readonly subjectRepository: ISubjectRepository;
+    private readonly subjectRepository: AbstractSubjectRepository;
 
-    constructor(_subjectRepository: ISubjectRepository) {
+    constructor(_subjectRepository: AbstractSubjectRepository) {
         super();
 
         this.subjectRepository = _subjectRepository;

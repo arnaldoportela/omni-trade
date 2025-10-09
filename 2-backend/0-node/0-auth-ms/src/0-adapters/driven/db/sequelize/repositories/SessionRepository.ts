@@ -1,10 +1,10 @@
 import { SessionEntity } from "@domain/auth/entities/SessionEntity";
-import { ISessionRepository } from "@domain/auth/ports/repositories/ISessionRepository";
+import { AbstractSessionRepository } from "@domain/auth/ports/repositories/AbstractSessionRepository";
 import { Session } from "../models/Session";
 import { Injectable } from "@crosscutting/ioc/InjectableDecorator";
 
 @Injectable()
-export class SessionRepository extends ISessionRepository {
+export class SessionRepository extends AbstractSessionRepository {
     public async selectAll(): Promise<SessionEntity[]> {
         const entities: SessionEntity[] = [];
         const sessions = await Session.findAll();

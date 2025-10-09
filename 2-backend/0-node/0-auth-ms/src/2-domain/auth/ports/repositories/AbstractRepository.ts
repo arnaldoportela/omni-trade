@@ -1,4 +1,4 @@
-export abstract class IRepository<TEntity>{
+export abstract class AbstractRepository<TEntity>{
 
     public abstract selectAll(): Promise<TEntity[]>;
     public abstract select(id: string): Promise<TEntity | null>;
